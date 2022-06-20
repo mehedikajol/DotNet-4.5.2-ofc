@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Create</h2>
@@ -34,12 +34,141 @@
     }
 *@
 
+<table class="table">
+    <tr>
+        <td>@Html.Label("Student", htmlAttributes: new { @class = "label-control" })</td>
+        <td>@Html.DropDownList("StudentId", null, "--Select Student--", htmlAttributes: new { @class = "form-control", @id = "StudentId" })</td>
+    </tr>
+</table>
 
+<br /><br />
+
+<div class="row">
+    <div class="col-md-8 center-block">
+        <table class="table subjectTable">
+            <thead>
+                <tr>
+                    <th>Ser Id</th>
+                    <th>Subject Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr></tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><button class="btn btn-primary" id="btnAddNewRow">Add Row</button></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    <button class="btn btn-default" >@Html.ActionLink("Back to List", "Index")</button>
+    <button class="btn btn-primary" id="Save">Save Data</button>
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script>
+
+
+    var slNo = 0;
+
+    // Add new row button click action
+    $('#btnAddNewRow').click(function () {
+        var newSerial = 0;
+        $('table.subjectTable tbody .slNo').each(function (index) {
+            newSerial = 0;
+            newSerial = newSerial + index * 1 + 1;
+        });
+        slNo = newSerial;
+
+        addNewRow();
+    });
+
+    // Add new row to table
+    function addNewRow() {
+        slNo++;
+        var studentId = $('#StudentId').val();
+
+        var newRow = jQuery(
+            '<tr>' +
+            '<td><input type="text" name="slNo" value="' + slNo + '" class="form-control slNo" disabled/></td>' +
+            '<td><input type="text" name="subjectName" value="" class="form-control"/></td>' +
+            '<td><button class="btn btn-danger" onclick="removeRow(this)" type="button"><i class="fa-solid fa-trash-can"></i></button></td>' +
+            '</tr>'
+        );
+        jQuery('table.subjectTable tbody').find('tr:last').before(newRow);
+    }
+
+    // Remove row when trash button clicked
+    function removeRow(e) {
+        $(e).parent().parent().remove();
+        $('table.subjectTable tbody .slNo').each(function (index) {
+            $(this).val(index + 1);
+        });
+    }
+
+    $('#Save').click(function () {
+
+        var isValidAll = true;
+        if ($('#subjectName').val() == "") {
+            alert("Enter subject Name!");
+            isValidAll = false;
+            $('#subjectName').focus();
+        }
+        else {
+            if (isValidAll == true) {
+                SaveSubjectData();
+            }
+        }
+    });
+
+    // Send data to the controller to save in database
+    function SaveSubjectData() {
+        $('#Save').attr("disabled", "disabled");
+
+        var studentId = $('#StudentId').val();
+        var subjectName = document.getElementsByName('subjectName');
+        console.log(subjectName);
+        var detailsValue = [];
+
+        for (var i = 0; i < subjectName.length; i++) {
+            detailsValue.push({
+                subjectName: subjectName[i].value
+            });
+        }
+        console.log(detailsValue);
+
+        $.ajax({
+            url: "/SubjectMas/SaveSubjectData",
+            type: "POST",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            data: {
+                SubjectName: detailsValue,
+                StudentId: studentId
+            },
+            success: function (result) {
+                $('#Save').removeAttr("disabled");
+                if (result.flag == true) {
+                    alert("Data Successfully Saved!");
+                    window.location.href("/SubjectMas/Index");
+                }
+                else {
+                    alert("Data can't be saved!")
+                }
+            },
+            error: function () {
+                alert("Something went wrong!");
+            }
+        });
+    }
+
+</script>

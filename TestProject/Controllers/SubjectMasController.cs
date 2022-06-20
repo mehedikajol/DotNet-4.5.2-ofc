@@ -43,6 +43,50 @@ namespace TestProject.Controllers
             return View();
         }
 
+        // POST: /SubjectMas/SaveSubjectData
+        public ActionResult SaveSubjectData(SubjectMa subjectMa, List<SubjectDet> subjectName)
+        {
+            var result = new
+            {
+                flag = false,
+                Message = "Success"
+            };
+
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    db.SubjectMas.Add(subjectMa);
+                    db.SaveChanges();
+
+                    foreach(var item in subjectName)
+                    {
+                        SubjectDet det = new SubjectDet();
+
+                        det.SubjectMasId = subjectMa.Id;
+                        det.SubjectName = item.SubjectName;
+
+                        db.SubjectDets.Add(det);
+                        db.SaveChanges();
+                    }
+                    transaction.Commit();
+                    result = new
+                    {
+                        flag = true,
+                        Message = "Success"
+                    };
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                catch(Exception e)
+                {
+                    transaction.Rollback();
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                    throw e;
+                }
+            }
+            
+        }
+
         // POST: SubjectMas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
