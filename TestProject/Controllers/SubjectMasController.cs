@@ -117,7 +117,8 @@ namespace TestProject.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.StudentId = new SelectList(db.Students, "Id", "StudentName", subjectMa.StudentId);
+            // ViewBag.StudentId = new SelectList(db.Students, "Id", "StudentName", subjectMa.StudentId);
+            ViewBag.StudentId = new SelectList(db.SubjectMas, "Id", "StudentId", subjectMa.Id);
             return View(subjectMa);
         }
 
@@ -162,6 +163,74 @@ namespace TestProject.Controllers
             db.SubjectMas.Remove(subjectMa);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        // GET: SubjectMas/LoadSavedData
+        public ActionResult LoadSavedData(int Id)
+        {
+            var data = db.SubjectDets.Where(x => x.SubjectMasId == Id).Select(x => new
+            {
+                SubjectName = x.SubjectName,
+            }).ToList();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: SubjectMas/UpdateSubjectData
+        public ActionResult UpdateSubjectData(SubjectMa subjectMa, List<SubjectDet> subjectName)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = new
+                {
+                    flag = false,
+                    Message = "Success"
+                };
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        if(subjectMa.StudentId > 0)
+                        {
+                            var data = db.SubjectDets.Where(x => x.SubjectMasId == subjectMa.StudentId).ToList();
+                            db.SubjectDets.RemoveRange(data);
+                            db.SaveChanges();
+                        }
+
+                        //db.Entry(subjectMa).State = EntityState.Modified;
+                        //db.SaveChanges();
+
+                        foreach (var item in subjectName)
+                        {
+                            SubjectDet det = new SubjectDet();
+
+                            det.SubjectMasId = subjectMa.StudentId;
+                            det.SubjectName = item.SubjectName;
+
+                            db.SubjectDets.Add(det);
+                            db.SaveChanges();
+                        }
+                        transaction.Commit();
+                        result = new
+                        {
+                            flag = true,
+                            Message = "Success"
+                        };
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                    catch(Exception e)
+                    {
+                        transaction.Rollback();
+                        result = new
+                        {
+                            flag = false,
+                            Message = "Success",
+                        };
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                        throw e;
+                    }
+                }
+            }
+            return View();
         }
 
         protected override void Dispose(bool disposing)

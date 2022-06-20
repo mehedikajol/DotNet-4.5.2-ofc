@@ -66,8 +66,8 @@
 </div>
 
 <div>
-    <button class="btn btn-default" >@Html.ActionLink("Back to List", "Index")</button>
-    <button class="btn btn-primary" id="Save">Save Data</button>
+    <button class="btn btn-default" type="button" >@Html.ActionLink("Back to List", "Index")</button>
+    <button class="btn btn-primary" type="button" id="Save">Save Data</button>
 </div>
 
 @section Scripts {
@@ -159,7 +159,7 @@
                 $('#Save').removeAttr("disabled");
                 if (result.flag == true) {
                     alert("Data Successfully Saved!");
-                    window.location.href("/SubjectMas/Index");
+                    window.location.href = "/SubjectMas/Index";
                 }
                 else {
                     alert("Data can't be saved!")
