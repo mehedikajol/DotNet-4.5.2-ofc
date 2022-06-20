@@ -1,0 +1,8 @@
+**/.vs
+
+**/packages
+
+**/App_Data
+**/App_Start
+**/bin
+**/obj
