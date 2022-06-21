@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Age Calcuator";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+
+<h2>
+    Calculate age using Birth Date in ASP.Net
+</h2>
+
+<input id="datepicker" autocomplete="off" class="input-group" />
+
+<br />
+<button type="button" id="btnCalculate"> Calculate Age</button>
+<br />
+<div id="divHtml"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#datepicker").datepicker({
+            dateFormat: 'mm/dd/yy'
+        });
+
+        $("#btnCalculate").click(function () {
+            var date = $('#datepicker');
+            var data = { date: date.val() };
+            //alert(data);
+            var json = JSON.stringify(data);
+            //alert(json);
+            $.ajax({
+                url: '/AgeCalculator/GetUsersAge',
+                type: "POST",
+                data: json,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $("#divHtml").html(result.calculatedAge);
+                    return false;
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+            return false;
+        });
+    });
+</script>

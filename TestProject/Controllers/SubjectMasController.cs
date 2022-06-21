@@ -33,6 +33,7 @@ namespace TestProject.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.StudentId = new SelectList(db.SubjectMas, "Id", "StudentId", subjectMa.Id);
             return View(subjectMa);
         }
 
