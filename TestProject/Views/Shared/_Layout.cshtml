@@ -26,6 +26,7 @@
                     <li>@Html.ActionLink("Master", "Index", "SubjectMas")</li>
                     <li>@Html.ActionLink("Details", "Index", "SubjectDets")</li>
                     <li>@Html.ActionLink("Age", "Index", "AgeCalculator")</li>
+                    <li>@Html.ActionLink("Time", "Index", "DateAndTimes")</li>
                 </ul>
             </div>
         </div>
@@ -38,7 +39,7 @@
         <p style="color: #bbbbbb; padding: 15px 0;">&copy; @DateTime.Now.Year - All Rights Reserved | Test Project </p>
     </footer>
 
-    @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/jquery")*@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

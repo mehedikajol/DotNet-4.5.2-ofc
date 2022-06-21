@@ -1,0 +1,55 @@
+﻿@model TestProject.Models.DateAndTime
+@{
+    ViewBag.Title = "Details Age";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+
+<h2>
+    Age
+</h2>
+
+<table class="table" style="width: 800px; margin: auto">
+    <tr>
+        <td style="width: 10%">@Html.Label("Id", htmlAttributes: new { @class = "control-label" })</td>
+        <td style="width: 10%;">@Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @id = "StudentId", @readonly = "readonly" } })</td>
+
+        <td style="width: 10%;">@Html.Label("Name", htmlAttributes: new { @class = "control-label" })</td>
+        <td style="width: 30%">@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @id = "Name", @readonly = "readonly" } })</td>
+
+        <td style="width: 10%;">@Html.Label("DOB", htmlAttributes: new { @class = "control-label" })</td>
+        <td style="width: 30%">@Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control", @id = "DateOfBirth", @readonly = "readonly" } })</td>
+    </tr>
+</table>
+
+<div id="divHtml"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowAge();
+    });
+
+    function ShowAge() {
+        var date = $('#DateOfBirth');
+        var data = { date: date.val() };
+        //alert(data);
+        var json = JSON.stringify(data);
+        //alert(json);
+        $.ajax({
+            url: '/AgeCalculator/GetUsersAge',
+            type: "POST",
+            data: json,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#divHtml").html(result.calculatedAge);
+                return false;
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+        return false;
+    }
+</script>

@@ -129,6 +129,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AgeCalculatorController.cs" />
+    <Compile Include="Controllers\DateAndTimesController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
@@ -137,8 +138,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DateAndTime.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\Model2.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\SubjectDet.cs" />
     <Compile Include="Models\SubjectMa.cs" />
@@ -201,6 +204,11 @@
     <Content Include="Views\SubjectDets\Edit.cshtml" />
     <Content Include="Views\SubjectDets\Index.cshtml" />
     <Content Include="Views\AgeCalculator\Index.cshtml" />
+    <Content Include="Views\DateAndTimes\Create.cshtml" />
+    <Content Include="Views\DateAndTimes\Delete.cshtml" />
+    <Content Include="Views\DateAndTimes\Details.cshtml" />
+    <Content Include="Views\DateAndTimes\Edit.cshtml" />
+    <Content Include="Views\DateAndTimes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
